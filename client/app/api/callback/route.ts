@@ -47,10 +47,7 @@ export async function GET(req: NextRequest) {
   const tokens = response.data;
   console.log(tokens);
   const res = NextResponse.redirect('http://localhost:3000');
-  res.cookies.set('refresh_token', tokens.refresh_token, {
-    httpOnly: true,
-    secure: true,
-  });
+  res.cookies.set('refresh_token', tokens.refresh_token);
   res.cookies.set('access_token', tokens.access_token, {
     httpOnly: true,
     secure: true,
