@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios, { AxiosResponse } from 'axios';
 
-const keycloakTokenUrl = `${process.env.KEYCLOAK_URL}/realms/myrealm/protocol/openid-connect/token`;
-const clientId = process.env.KEYCLOAK_CLIENT;
-const clientSecret = process.env.KEYCLOAK_CLIENT_SECRET;
+const keycloakTokenUrl = `${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/realms/${process.env.NEXT_PUBLIC_KEYCLOAK_REALMS}/protocol/openid-connect/token`;
+const clientId = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT;
+const clientSecret = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_SECRET;
 const redirectUri = 'http://localhost:3000/api/callback';
 
 type authenticationResponse = {
@@ -17,7 +17,7 @@ type authenticationResponse = {
   scope: string;
 };
 
-export async function GET(req: NextRequest) {
+export const GET = async (req: NextRequest) => {
   const code = req.nextUrl.searchParams.get('code');
   if (!code) {
     return NextResponse.json({ error: 'Authorization code is missing' });
@@ -55,4 +55,4 @@ export async function GET(req: NextRequest) {
   res.cookies.set('id_token', tokens.id_token);
 
   return res;
-}
+};
