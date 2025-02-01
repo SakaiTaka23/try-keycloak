@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { KEYCLOAK_BASE_URL } from './links';
+import { KEYCLOAK_BASE_URL } from '../links';
 
 export const KEYCLOAK_SIGN_IN_URL = `${KEYCLOAK_BASE_URL}/auth`;
 export const KEYCLOAK_SIGN_UP_URL = `${KEYCLOAK_BASE_URL}/registrations`;

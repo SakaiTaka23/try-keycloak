@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import jwt from 'jsonwebtoken';
-import { handleLogin, handleSignUp } from './authNavigation';
-import { handleLogout } from './logout';
+import { handleLogin, handleSignUp } from './userAction/authEntry';
+import { handleLogout } from './userAction/logout';
+import { getTokens } from './tokens/getter';
 
 type DecodedToken = {
   preferred_username?: string;
@@ -14,16 +14,18 @@ export const useAuth = () => {
   const [nickname, setNickname] = useState<string | null>(null);
 
   useEffect(() => {
-    const idToken = Cookies.get('id_token');
-    if (idToken) {
+    const fetchTokens = async () => {
+      const tokens = await getTokens();
+      const idToken = tokens.id_token;
       setIDToken(idToken);
-      const decoded = jwt.decode(idToken) as DecodedToken;
-      setNickname(decoded?.preferred_username || null);
+      if (idToken != '') {
+        const decoded = jwt.decode(idToken) as DecodedToken;
+        setNickname(decoded?.preferred_username || null);
+      }
+      setRefreshToken(tokens.refresh_token);
     }
-    const refreshToken = Cookies.get('refresh_token');
-    if (refreshToken) {
-      setRefreshToken(refreshToken);
-    }
+
+    fetchTokens().catch(console.error);
   }, []);
 
   return {

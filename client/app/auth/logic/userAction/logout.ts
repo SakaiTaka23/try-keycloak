@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { KEYCLOAK_BASE_URL } from './links';
+import { KEYCLOAK_BASE_URL } from '../links';
 
 const KEYCLOAK_LOGOUT_URL = `${KEYCLOAK_BASE_URL}/logout`;
 
