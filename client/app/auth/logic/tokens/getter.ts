@@ -10,8 +10,12 @@ type tokens = {
 
 export const getTokens = async () => {
   const id = getIDToken();
-  const refresh = getRefreshToken();
-  const access = await getAccessToken(refresh);
+const refresh = await getRefreshToken();
+    let access  = '';  
+    if (refresh) {
+      const accessToken = await getAccessToken(refresh);
+      access = accessToken ?? '';
+    }
 
   return {
     id_token: id,
@@ -29,13 +33,33 @@ const getIDToken = () => {
   }
 };
 
-const getRefreshToken = () => {
+const getRefreshToken = async () => {
   const refreshToken = Cookies.get('refresh_token');
-  if (refreshToken) {
-    return refreshToken;
-  } else {
+  if (!refreshToken) {
     return '';
   }
+
+  const decoded = jwt.decode(refreshToken, { complete: true });
+  if (!decoded || typeof decoded === 'string') {
+    return '';
+  }
+  const kid = decoded.header.kid;
+  if (!kid) {
+    return '';
+  }
+
+  const publicKey = await getPublicKey(kid);
+
+  jwt.verify(refreshToken, publicKey, (err) => {
+    if (err) {
+      // todo: try to refresh token
+      console.log(err);
+      return '';
+    } else {
+      console.log('ok', refreshToken);
+      return refreshToken;
+    }
+  });
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

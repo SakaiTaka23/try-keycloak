@@ -23,8 +23,9 @@ export const useAuth = () => {
         setNickname(decoded?.preferred_username || null);
       }
       setRefreshToken(tokens.refresh_token);
+      console.log('tokens', tokens)
     }
-
+    
     fetchTokens().catch(console.error);
   }, []);
 

@@ -35,7 +35,9 @@ export const getPublicKey = async (kid: string) => {
       throw err;
     });
 
-  localStorage.setItem(CERT_STORE_KEY, JSON.stringify(keys));
+    if (typeof window !== 'undefined') {
+        localStorage.setItem(CERT_STORE_KEY, JSON.stringify(keys));
+    }
 
   return keys[kid];
 };
